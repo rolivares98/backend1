@@ -4,6 +4,7 @@ const res = require('express/lib/response');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const { post } = require('./products.router');
 
 const cartsFile = path.join(__dirname, '../carts.json');
 
@@ -29,3 +30,42 @@ router.post('/', (req, res) => {
     writeCarts(carts);
     res.json({message: 'carrito creado', cart: newCart});
 });
+
+// listar el carro
+
+router.get('/:cid', (req, res) => {
+    const { cid} =req.params;
+    const carts = readCarts();
+
+    const cart = carts.find((c) => c.id === cid);
+    if(!cart) {
+        return res.status(404).json({message: 'carrito no encontrado'});
+    }
+    res.json(cart.products);
+});
+
+// add producto al carro
+
+router.post('/:cid/products/:pid', (req, res) => {
+    const { cid, pid } = req.params;
+    const carts = readCarts();
+    const cartIndex = carts.findIndex((c) => c.id === cid);
+
+    if(cartIndex === -1) {
+        return res.status(404).json({ message: 'carrito no encontrado'});
+    }
+    const cart =carts[cartIndex];
+    const producIndex = cart.products.findIndex((p) => p.product === pid);
+
+    if(producIndex === -1) {
+        cart.products.push({ product: pid, quantity: 1});
+    } else {
+        cart.products[producIndex].quantity += 1;
+    }
+    writeCarts(carts);
+    res.json({ message: 'producto agregado al carrito', cart});
+    
+
+});
+
+module.exports =router;
