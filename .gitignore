@@ -1,0 +1,23 @@
+# Ignorar la carpeta node_modules
+node_modules/
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar el archivo de lock de paquetes si no quieres incluirlo (opcional)
+package-lock.json
+yarn.lock
+
+# Ignorar los archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar directorios y archivos de compilación
+dist/
+build/
