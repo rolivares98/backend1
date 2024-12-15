@@ -1,20 +1,30 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
 const path = require('path');
+const router = express.Router();
 
 const productsFile = path.join(__dirname, '../products.json');
 
+// leer productos
+
 const readProducts = () => {
-    const data = fs.readFileSync(productsFile, 'utf-8');
-    return JSON.parse(data);
+    try {
+        if (!fs.existsSync(productsFile)) {
+            fs.writeFileSync(productsFile, JSON.stringify([]));
+        }
+        const data = fs.readFileSync(productsFile, 'utf-8');
+        return JSON.parse(data || '[]');
+    } catch (error) {
+        console.error('Error leyendo el archivo:', error);
+        return [];
+    }
 };
 
 const writeProducts = (products) => {
-    fs.writeFileSync(filePath, JSON.stringify(products, null, 2));
+    fs.writeFileSync(productsFile, JSON.stringify(products, null, 2));
 };
 
-const generateId = () => Math.random().toString(36).substring(2, 10);
+const generateId = () => Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
 
 //routes
 
@@ -43,13 +53,13 @@ router.get('/:pid', (req, res) => {
 // agregar un producto
 
 router.post('/', (req, res) => {
-    const { title, descripcion, code, price, status =true, stock, category, thumbnails} =req.body;
+    const { title, description, code, price, status = true, stock, category, thumbnails } = req.body;
 
-    if(!title || !descripcion || !code || !price || !stock || !category){
-        return res.status(400).json({error: 'todos los campos son obligatorios, menos thumbnails'});
+    if (!title || !description || !code || !price || !stock || !category) {
+        return res.status(400).json({ error: 'Todos los campos son obligatorios, menos thumbnails' });
     }
 
-    const products =readProducts();
+    const products = readProducts();
     const newProduct = {
         id: generateId(),
         title,
@@ -64,31 +74,31 @@ router.post('/', (req, res) => {
     products.push(newProduct);
     writeProducts(products);
 
-    res.status(201).json({message: 'se ha agregado un producto', product: newProduct});
+    res.status(201).json({ message: 'Producto agregado exitosamente', product: newProduct });
 });
 
 //pid actualizar producto
 
 router.put('/:pid', (req, res) => {
-    const {pid} = req.params;
+    const { pid } = req.params;
     const updates = req.body;
 
     const products = readProducts();
-    const producIndex = products.findIndex((p) => p.id === pid);
-    if(producIndex === -1) {
-        return res.status(404).json({message: 'producto no encontrado'});
+    const productIndex = products.findIndex((p) => p.id === pid);
+    if (productIndex === -1) {
+        return res.status(404).json({ message: 'Producto no encontrado' });
     }
 
-    const{id, ...allowedUpdates} = updates;
-    products[producIndex] = { ...products[productIndex], ...allowedUpdates};
+    const { id, ...allowedUpdates } = updates; // No se permite actualizar el ID
+    products[productIndex] = { ...products[productIndex], ...allowedUpdates };
     writeProducts(products);
-    res.json({message: 'producto actualizado', product: products[producIndex]});
+    res.json({ message: 'Producto actualizado', product: products[productIndex] });
 });
 
 // deletear producto
 
 router.delete('/:pid', (req, res) => {
-    const {pid} =req.params;
+    const { pid } = req.params;
     const products = readProducts();
 
     const filteredProducts = products.filter((p) => p.id !== pid);
@@ -96,7 +106,7 @@ router.delete('/:pid', (req, res) => {
     if (filteredProducts.length === products.length) {
         return res.status(404).json({ message: 'Producto no encontrado' });
     }
-    
+
     writeProducts(filteredProducts);
     res.json({ message: 'Producto eliminado' });
 });
