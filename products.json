@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "m4q0etgtytq3qaw6",
+    "title": "Smartphone",
+    "description": "High-end smartphone with 128GB storage",
+    "code": "SP123",
+    "price": 999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Tecnología",
+    "thumbnails": []
+  },
+  {
+    "id": "m4q0fmzce2hs5pbk",
+    "title": "Laptop",
+    "description": "Powerful gaming laptop with RTX 4080 GPU",
+    "code": "LP456",
+    "price": 1999.99,
+    "status": true,
+    "stock": 20,
+    "category": "Tecnología",
+    "thumbnails": []
+  },
+  {
+    "id": "m4q0wazxzqhi6g87",
+    "title": "Headphones",
+    "description": "Noise-cancelling headphones",
+    "code": "HP789",
+    "price": 249.99,
+    "status": true,
+    "stock": 100,
+    "category": "Tecnología",
+    "thumbnails": []
+  },
+  {
+    "id": "m4q0wu4h2vy31x7e",
+    "title": "Smartwatch",
+    "description": "Smartwatch with health tracking features",
+    "code": "SW101",
+    "price": 299.99,
+    "status": true,
+    "stock": 80,
+    "category": "Tecnología",
+    "thumbnails": []
+  }
+]

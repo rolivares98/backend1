@@ -68,4 +68,28 @@ router.post('/:cid/products/:pid', (req, res) => {
 
 });
 
+// deletear producto del carrito
+
+router.delete('/:cid/products/:pid', (req, res) => {
+    const { cid, pid } = req.params;
+    const carts = readCarts();
+    const cartIndex = carts.findIndex((c) => c.id === cid);
+
+    if (cartIndex === -1) {
+        return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+
+    const cart = carts[cartIndex];
+    const filteredProducts = cart.products.filter((p) => p.product !== pid);
+
+    if (filteredProducts.length === cart.products.length) {
+        return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+    }
+
+    cart.products = filteredProducts;
+    writeCarts(carts);
+
+    res.json({ message: 'Producto eliminado del carrito', cart });
+});
+
 module.exports =router;
