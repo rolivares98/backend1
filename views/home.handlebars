@@ -1,0 +1,40 @@
+<h1>Lista de productos</h1>
+<ul id="product-list">
+    {{#each products}}
+        <li>{{this.title}} - ${{this.price}}</li>
+    {{/each}}
+</ul>
+
+<h2>Agregar nuevo producto</h2>
+<form id="product-form">
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" required>
+    <button type="submit">Agregar producto</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    // Escuchar actualizaciones de productos
+    socket.on('updateProducts', (products) => {
+        const productList = document.getElementById('product-list');
+        productList.innerHTML = ''; // Limpiar lista
+        products.forEach(product => {
+            const li = document.createElement('li');
+            li.textContent = `${product.title} - $${product.price}`;
+            productList.appendChild(li);
+        });
+    });
+
+    // Enviar nuevo producto
+    document.getElementById('product-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const price = document.getElementById('price').value;
+        socket.emit('newProduct', { title, price });
+        e.target.reset(); // Limpiar formulario
+    });
+</script>

@@ -42,5 +42,15 @@
     "stock": 80,
     "category": "Tecnología",
     "thumbnails": []
+  },
+  {
+    "id": "qsbos4oe",
+    "title": "torre",
+    "price": "35000"
+  },
+  {
+    "id": "7diduzma",
+    "title": "ssd",
+    "price": "75000"
   }
 ]
